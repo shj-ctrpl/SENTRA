@@ -44,6 +44,16 @@ public:
 		cells.insert({ this->id, this });
 	}
 
+	Cell(int id, Material material, const vector<int>& surf_ids, const vector<bool>& senses, vector<double> surf_areas, double volume) {
+		this->surf_ids = surf_ids;
+		this->senses = senses;
+		this->material = material;
+		this->id = id;
+		this->surf_areas = surf_areas;
+		this->volume = volume;
+		cells.insert({ this->id, this });
+	}
+
 	Cell(int id, int fill, const vector<int>& surf_ids, const vector<bool>& senses) {
 		this->surf_ids = surf_ids;
 		this->senses = senses;
