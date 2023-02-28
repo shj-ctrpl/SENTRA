@@ -72,7 +72,7 @@ public:
 		}
 	}
 
-	bool isInCell(const Vector3& pos) const {
+	bool isInCell(const vector3<double>& pos) const {
 		bool sense = true;
 		int j = 0;
 		for (int surfid : surf_ids) {
@@ -83,7 +83,7 @@ public:
 		return sense;
 	}
 
-	double DTS(const Vector3& pos, const Vector3& dir, Collision& col) {
+	double DTS(const vector3<double>& pos, const vector3<double>& dir, Collision& col) {
 		double tmp = INF(), dts = INF();
 		for (int surfId : surf_ids) {
 			tmp = Surface::surfaces[surfId]->DTS(pos, dir);

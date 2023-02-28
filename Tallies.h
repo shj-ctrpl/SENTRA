@@ -32,7 +32,7 @@ public:
 	~SurfaceCurrentTally() = default;
 
 	virtual void AddScore(Collision& col) noexcept override {
-		current += 1;//고쳐야함
+		current += 1;
 	}
 
 	virtual double GetScore() const noexcept override {

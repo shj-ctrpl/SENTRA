@@ -31,19 +31,19 @@ public:
 		return isReflective;
 	}
 
-	virtual bool Sense(const Vector3& pos) const = 0;
-	virtual double DTS(const Vector3& pos, const Vector3& dir) const = 0;
+	virtual bool Sense(const vector3<double>& pos) const = 0;
+	virtual double DTS(const vector3<double>& pos, const vector3<double>& dir) const = 0;
 
-	virtual void Reflect(const Vector3& pos, Vector3& dir) const = 0;
+	virtual void Reflect(const vector3<double>& pos, vector3<double>& dir) const = 0;
 };
 
 // Ax + By + Cz = D
 class Plane : public Surface {
 private:
-	Vector3 normal;
+	vector3<double> normal;
 	double distance;
 
-	Plane(int id, const Vector3& normal, double distance) {
+	Plane(int id, const vector3<double>& normal, double distance) {
 		this->normal = normal;
 		this->distance = distance;
 		surfaces.insert({ id, this });
@@ -52,33 +52,33 @@ private:
 public:
 
 	static Plane PX(int id, double distance) {
-		return { id, Vector3(1, 0, 0), distance };
+		return { id, vector3<double>(1, 0, 0), distance };
 	}
 
 	static Plane PY(int id, double distance) {
-		return { id, Vector3(0, 1, 0), distance };
+		return { id, vector3<double>(0, 1, 0), distance };
 	}
 
 	static Plane PZ(int id, double distance) {
-		return { id, Vector3(0, 0, 1), distance };
+		return { id, vector3<double>(0, 0, 1), distance };
 	}
 
-	static Plane PXYZ(int id, const Vector3& normal, double distance) {
+	static Plane PXYZ(int id, const vector3<double>& normal, double distance) {
 		return { id, normal, distance };
 	}
 
-	virtual bool Sense(const Vector3& pos) const {
-		if ((normal * pos) - distance >= 0) return true;
+	virtual bool Sense(const vector3<double>& pos) const {
+		if (normal.dot(pos) - distance >= 0) return true;
 		else return false;
 	}
 
-	virtual double DTS(const Vector3& pos, const Vector3& dir) const {
+	virtual double DTS(const vector3<double>& pos, const vector3<double>& dir) const {
 		if (normal == dir) { return INF(); }
-		return (distance - (normal * pos)) / (normal * dir);
+		return (distance - normal.dot(pos) / normal.dot(dir));
 	}
 
-	virtual void Reflect(const Vector3& pos, Vector3& dir) const {
-		Vector3 reflected = dir - normal * 2 * ((normal * dir) / (normal * normal));
+	virtual void Reflect(const vector3<double>& pos, vector3<double>& dir) const {
+		vector3<double> reflected = dir - 2.0 * normal.dot(normal * dir / normal * normal);
 		dir = reflected;
 	}
 };
@@ -86,11 +86,11 @@ public:
 class Cylinder : public Surface {
 
 private:
-	Vector3 normal;
-	Vector3 offset;
+	vector3<double> normal;
+	vector3<double> offset;
 	double radius;
 
-	Cylinder(int id, const Vector3& normal, const Vector3& offset, double radius) {
+	Cylinder(int id, const vector3<double>& normal, const vector3<double>& offset, double radius) {
 		this->normal = normal;
 		this->offset = offset;
 		this->radius = radius;
@@ -99,19 +99,19 @@ private:
 public:
 
 	static Cylinder CylX(int id, double offset_y, double offset_z, double radius) {
-		return { id, Vector3(0, 1, 1), Vector3(0, offset_y, offset_z), radius };
+		return { id, vector3<double>(0, 1, 1), vector3<double>(0, offset_y, offset_z), radius };
 	}
 
 	static Cylinder CylY(int id, double offset_x, double offset_z, double radius) {
-		return { id, Vector3(1, 0, 1), Vector3(offset_x, 0, offset_z), radius };
+		return { id, vector3<double>(1, 0, 1), vector3<double>(offset_x, 0, offset_z), radius };
 	}
 
 	static Cylinder CylZ(int id, double offset_x, double offset_y, double radius) {
-		return { id, Vector3(1, 1, 0), Vector3(offset_x, offset_y, 0), radius };
+		return { id, vector3<double>(1, 1, 0), vector3<double>(offset_x, offset_y, 0), radius };
 	}
 
-	virtual bool Sense(const Vector3& pos) const {
-		if (normal * Vector3::ElementProduct((pos - offset), (pos - offset)) <= radius * radius) {
+	virtual bool Sense(const vector3<double>& pos) const {
+		if (((pos - offset) * (pos - offset)).dot(normal) <= radius * radius) {
 			return false;
 		}
 		else {
@@ -119,11 +119,11 @@ public:
 		}
 	}
 
-	virtual double DTS(const Vector3& pos, const Vector3& dir) const {
-		double a = normal * Vector3::ElementProduct(dir, dir);
+	virtual double DTS(const vector3<double>& pos, const vector3<double>& dir) const {
+		double a = normal.dot(dir * dir);
 		if (a == 0) { return INF(); }
-		double k = normal * Vector3::ElementProduct(dir, (pos - offset));
-		double c = normal * Vector3::ElementProduct((pos - offset), (pos - offset)) - (radius * radius);
+		double k = normal.dot(dir * (pos - offset));
+		double c = ((pos - offset) * (pos - offset)).dot(normal) - (radius * radius);
 
 		if ((k * k - a * c) < 0) { return INF(); }
 		if (c < 0) {
@@ -136,8 +136,8 @@ public:
 		}
 	}
 
-	virtual void Reflect(const Vector3& pos, Vector3& dir) const {
-		double grad = Vector3::ElementProduct(normal, dir) * (pos - offset) / (radius * radius);
+	virtual void Reflect(const vector3<double>& pos, vector3<double>& dir) const {
+		double grad = normal.dot(dir * (pos - offset)) / (radius * radius);
 		dir = dir - ((pos - offset) * 2 * grad);
 	}
 };
@@ -145,10 +145,10 @@ public:
 class Sphere : public Surface {
 
 private:
-	Vector3 offset;
+	vector3<double> offset;
 	double radius;
 
-	Sphere(int id, const Vector3& offset, double radius) {
+	Sphere(int id, const vector3<double>& offset, double radius) {
 		this->offset = offset;
 		this->radius = radius;
 		surfaces.insert({ id, this });
@@ -156,21 +156,21 @@ private:
 
 public:
 	static Sphere SO(int id, double radius) {
-		return { id, Vector3(0, 0, 0), radius };
+		return { id, vector3<double>(0, 0, 0), radius };
 	}
 
-	static Sphere Sph(int id, const Vector3& offset, double radius) {
+	static Sphere Sph(int id, const vector3<double>& offset, double radius) {
 		return { id, offset, radius };
 	}
 
-	virtual bool Sense(const Vector3& pos) const {
-		if ((pos - offset) * (pos - offset) >= (radius * radius)) return true;
+	virtual bool Sense(const vector3<double>& pos) const {
+		if ((pos - offset).dot(pos - offset) >= (radius * radius)) return true;
 		else return false;
 	}
 
-	virtual double DTS(const Vector3& pos, const Vector3& dir) const {
-		double k = (pos - offset) * dir;
-		double c = (pos - offset) * (pos - offset) - radius * radius;
+	virtual double DTS(const vector3<double>& pos, const vector3<double>& dir) const {
+		double k = (pos - offset).dot(dir);
+		double c = (pos - offset).dot(pos - offset) - radius * radius;
 		double d = k * k - c;
 		if (d >= 0) {
 			if (c < 0) {
@@ -187,8 +187,8 @@ public:
 		}
 	}
 
-	virtual void Reflect(const Vector3& pos, Vector3& dir) const {
-		double grad = dir * (pos - offset) / (radius * radius);
+	virtual void Reflect(const vector3<double>& pos, vector3<double>& dir) const {
+		double grad = dir.dot(pos - offset) / (radius * radius);
 		dir = dir - ((pos - offset) * 2 * grad);
 	}
 };
@@ -198,15 +198,15 @@ class Cone : public Surface {
 private:
 
 public:
-	virtual bool Sense(const Vector3& pos) const {
+	virtual bool Sense(const vector3<double>& pos) const {
 
 	}
 
-	virtual double DTS(const Vector3& pos, const Vector3& dir) const {
+	virtual double DTS(const vector3<double>& pos, const vector3<double>& dir) const {
 
 	}
 
-	virtual void Reflect(const Vector3& pos, Vector3& dir) const {
+	virtual void Reflect(const vector3<double>& pos, vector3<double>& dir) const {
 
 	}
 };
@@ -215,15 +215,15 @@ class Quadric : public Surface {
 private:
 
 public:
-	virtual bool Sense(const Vector3& pos) const {
+	virtual bool Sense(const vector3<double>& pos) const {
 
 	}
 
-	virtual double DTS(const Vector3& pos, const Vector3& dir) const {
+	virtual double DTS(const vector3<double>& pos, const vector3<double>& dir) const {
 
 	}
 
-	virtual void Reflect(const Vector3& pos, Vector3& dir) const {
+	virtual void Reflect(const vector3<double>& pos, vector3<double>& dir) const {
 
 	}
 };
@@ -233,33 +233,34 @@ class Torus : public Surface {
 private:
 
 public:
-	virtual bool Sense(const Vector3& pos) const {
+	virtual bool Sense(const vector3<double>& pos) const {
 
 	}
 
-	virtual double DTS(const Vector3& pos, const Vector3& dir) const {
+	virtual double DTS(const vector3<double>& pos, const vector3<double>& dir) const {
 
 	}
 
-	virtual void Reflect(const Vector3& pos, Vector3& dir) const {
+	virtual void Reflect(const vector3<double>& pos, vector3<double>& dir) const {
 
 	}
 };
 
+/* No more be used - Replaced by planes
 class RPP : public Surface {
 private:
 	int id = -1;
-	Vector3 pos_start, pos_end;
+	vector3<double> pos_start, pos_end;
 
 public:
-	RPP(int id, const Vector3& pos_start, const Vector3& pos_end) {
+	RPP(int id, const vector3<double>& pos_start, const vector3<double>& pos_end) {
 		this->id = id;
 		this->pos_start = pos_start;
 		this->pos_end = pos_end;
 		surfaces.insert({ this->id, this });
 	}
 
-	virtual bool Sense(const Vector3& pos) const {
+	virtual bool Sense(const vector3<double>& pos) const {
 		if (pos >= pos_start && pos <= pos_end) {
 			return false;
 		}
@@ -268,17 +269,14 @@ public:
 		}
 	}
 
-	virtual double DTS(const Vector3& pos, const Vector3& dir) const override {
+	virtual double DTS(const vector3<double>& pos, const vector3<double>& dir) const override {
 		double dts = INF();
-		Vector3 tangentPoint = Vector3(0, 0, 0);
+		vector3<double> tangentPoint = vector3<double>(0, 0, 0);
 
-		array<double, 6> dists = { INF() };
-		dists[0] = (pos.x - pos_start.x) / -dir.x;
-		dists[1] = (pos.x - pos_end.x) / -dir.x;
-		dists[2] = (pos.y - pos_start.y) / -dir.y;
-		dists[3] = (pos.y - pos_end.y) / -dir.y;
-		dists[4] = (pos.z - pos_start.z) / -dir.z;
-		dists[5] = (pos.z - pos_end.z) / -dir.z;
+		vector3<double> d1, d2;
+		d1 = (pos_start - pos) / dir;
+		d2 = (pos_end - pos) / dir;
+
 
 		for (auto d : dists) {
 			if (d <= 0) { continue; }
@@ -290,7 +288,7 @@ public:
 		return dts;
 	}
 
-	virtual void Reflect(const Vector3& pos, Vector3& dir) const {
+	virtual void Reflect(const vector3<double>& pos, vector3<double>& dir) const {
 		int side = 0;
 		double tmp = INF();
 
@@ -332,5 +330,6 @@ public:
 		}
 	}
 };
+*/
 
 unordered_map<int, Surface*> Surface::surfaces = { {} };

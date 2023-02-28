@@ -38,7 +38,7 @@ public:
 
 	~Universe() = default;
 
-	virtual bool findCell(const Vector3& pos, Collision& col) {
+	virtual bool findCell(const vector3<double>& pos, Collision& col) {
 		auto i = neighbors.find(col.cellId);
 
 		// Try neighbor search
@@ -78,10 +78,11 @@ class Lattice : public Universe {
 private:
 	int id = 0;
 	int lat_at_x = 0, lat_at_y = 0;
-	Vector3 pos_start, pos_end, lat_size, lat_num;
+	vector3<double> pos_start, pos_end, lat_size;
+	vector3<int> lat_num;
 	vector<vector<int>> indices;
 
-	int atUniv(const Vector3& pos) {
+	int atUniv(const vector3<double>& pos) {
 		lat_at_x = int(floor((pos.x - pos_start.x) / lat_size.x));
 		if (lat_at_x < 0) { lat_at_x = 0; }
 		if (lat_at_x >= lat_num.x) { lat_at_x = lat_num.x - 1; }
@@ -92,8 +93,8 @@ private:
 		return indices[lat_at_y][lat_at_x];
 	}
 
-	Vector3 local(const Vector3& pos) const {
-		Vector3 localPos = Vector3(
+	vector3<double> local(const vector3<double>& pos) const {
+		vector3<double> localPos = vector3<double>(
 			fmod((pos.x - pos_start.x), lat_size.x) - lat_size.x / 2,
 			fmod((pos.y - pos_start.y), lat_size.y) - lat_size.y / 2,
 			pos.z);
@@ -101,10 +102,10 @@ private:
 	}
 
 public:
-	Lattice(int id, const Vector3& pos_start, const Vector3& lat_size, const Vector3& lat_num, const vector<vector<int>>& indices) {
+	Lattice(int id, const vector3<double>& pos_start, const vector3<double>& lat_size, const vector3<int>& lat_num, const vector<vector<int>>& indices) {
 		this->id = id;
 		this->pos_start = pos_start;
-		this->pos_end = pos_start + Vector3::ElementProduct(lat_size, lat_num);
+		this->pos_end = pos_start + lat_num * (vector3<double>)lat_size;
 		this->lat_size = lat_size;
 		this->lat_num = lat_num;
 		this->indices = indices;
@@ -113,7 +114,7 @@ public:
 
 	~Lattice() = default;
 
-	virtual bool findCell(const Vector3& pos, Collision& col) override {
+	virtual bool findCell(const vector3<double>& pos, Collision& col) override {
 		bool found = false;
 
 		if (pos >= pos_start && pos <= pos_end) {

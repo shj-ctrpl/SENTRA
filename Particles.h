@@ -16,7 +16,7 @@ using namespace std;
 class Particle
 {
 private:
-	Vector3 pos, dir;
+	vector3<double> pos, dir;
 	int grp = 0;
 	double weight = 1.0, flightlength = 0.0;
 	double dts = 0, dtc = INF();
@@ -25,9 +25,9 @@ public:
 	static Collision col;
 	Random_generator rng;
 
-	Particle(const Vector3& pos, const Vector3& dir, int eGroup) {
+	Particle(const vector3<double>& pos, const vector3<double>& dir, int eGroup) {
 		this->pos = pos;
-		this->dir = dir.Normalized();
+		this->dir = dir.normalized();
 		this->grp = eGroup;
 		this->rng = Random_generator(seed);
 	}

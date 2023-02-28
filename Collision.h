@@ -9,9 +9,11 @@ using namespace std;
 class Collision {
 
 public:
+	vector<int> lattice_pos;
 	vector<int> univId;
-	vector<Vector3> biases;
-	Vector3 bias;
+	vector<vector3<double>> biases;
+	vector3<double> bias;
+
 	int lastuniv;
 	int surfId;
 	int cellId;
@@ -19,7 +21,7 @@ public:
 	Collision() {
 		univId = {};
 		biases = {};
-		bias = Vector3(0, 0, 0);
+		bias = vector3<double>(0, 0, 0);
 		lastuniv = -1;
 		surfId = -1;
 		cellId = -1;
@@ -28,29 +30,29 @@ public:
 	void Initialize() {
 		univId.clear();
 		biases.clear();
-		bias = Vector3(0, 0, 0);
+		bias = vector3<double>(0, 0, 0);
 		lastuniv = -1;
 		surfId = -1;
 		cellId = -1;
 	}
 
-	void AddBias(const Vector3& bias) {
+	void AddBias(const vector3<double>& bias) {
 		biases.push_back(bias);
 		double x = 0, y = 0;
-		for (Vector3& v : biases) {
+		for (vector3<double>& v : biases) {
 			x += v.x;
 			y += v.y;
 		}
-		this->bias = Vector3(x, y, 0);
+		this->bias = vector3<double>(x, y, 0);
 	}
 
 	void RemoveBias() {
 		if (!biases.empty()) { biases.pop_back(); }
 		double x = 0, y = 0;
-		for (Vector3& v : biases) {
+		for (vector3<double>& v : biases) {
 			x += v.x;
 			y += v.y;
 		}
-		this->bias = Vector3(x, y, 0);
+		this->bias = vector3<double>(x, y, 0);
 	}
 };

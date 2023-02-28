@@ -33,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cells.cpp" />
+    <ClCompile Include="Geometries.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Surfaces.cpp" />
     <ClCompile Include="Universes.cpp" />

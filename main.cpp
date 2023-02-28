@@ -16,7 +16,7 @@
 
 using namespace std;
 
-void Checker(int world, const Vector3& min, const Vector3& max, const Vector3& step)
+void Checker(int world, const vector3<double>& min, const vector3<double>& max, const vector3<double>& step)
 {
 	Collision col;
 	for (double z = min.z; z <= max.z; z += step.z) {
@@ -39,7 +39,7 @@ void Checker(int world, const Vector3& min, const Vector3& max, const Vector3& s
 				while (true) {
 					while (true) {
 						if (col.univId.empty()) { return; }
-						if (Universe::universes[col.univId.back()]->findCell(Vector3(x, y, z) + col.bias, col)) break;
+						if (Universe::universes[col.univId.back()]->findCell(vector3<double>(x, y, z) + col.bias, col)) break;
 					}
 
 					if (!Cell::cells[col.cellId]->findFill(col)) {
@@ -67,8 +67,8 @@ int main(void) {
 	vector<Particle> sParticles;
 	vector<double> egs;
 
-	const Vector3 sPos(-8.5, -8.5, 0.0);
-	const Vector3 ePos(8.5, 8.5, 20);
+	const vector3<double> sPos(-8.5, -8.5, 0.0);
+	const vector3<double> ePos(8.5, 8.5, 20);
 
 	double egssum = 0;
 	double mean = 0;
@@ -87,16 +87,16 @@ int main(void) {
 	*/
 
 	Cylinder s1 = Cylinder::CylZ(1, 0, 0, 0.45);
-	RPP s2(2, Vector3(-0.5, -0.5, 0.0), Vector3(0.5, 0.5, 20));
-	RPP pad1(11, Vector3(-8.5, -8.5, 0.0), Vector3(8.5, 8.5, 20));
-	RPP pad2(12, Vector3(-9.0, -9.0, -1.0), Vector3(9.0, 9.0, 21));
+	RPP s2(2, vector3<double>(-0.5, -0.5, 0.0), vector3<double>(0.5, 0.5, 20));
+	RPP pad1(11, vector3<double>(-8.5, -8.5, 0.0), vector3<double>(8.5, 8.5, 20));
+	RPP pad2(12, vector3<double>(-9.0, -9.0, -1.0), vector3<double>(9.0, 9.0, 21));
 	pad2.MakeReflective();
 
 	Cell* c1 = new Cell(1, materials[0], vector<int> {1, 2}, vector<bool> {false, false});
 	Cell* c2 = new Cell(2, materials[0], vector<int> {1, 2}, vector<bool> {true, false});
 	Universe* pin = new Universe(10, vector<int> {1, 2});
 
-	Lattice* latt = new Lattice(11, Vector3(-8.5, -8.5, 0.0), Vector3(1.0, 1.0, 20.0), Vector3(17, 17, 1),
+	Lattice* latt = new Lattice(11, vector3<double>(-8.5, -8.5, 0.0), vector3<double>(1.0, 1.0, 20.0), vector3<double>(17, 17, 1),
 		vector<vector<int>> {
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
@@ -123,8 +123,8 @@ int main(void) {
 	Universe* world = new Universe(12, vector<int> {3, 4});
 	/*
 	Cylinder s1 = Cylinder::CylZ(1, 0, 0, 0.54);
-	RPP s2(2, Vector3(-0.63, -0.63, 0.0), Vector3(0.63, 0.63, 385.56));
-	RPP pad(11, Vector3(-64.26, -64.26, -21.42), Vector3(64.26, 64.26, 406.98));
+	RPP s2(2, vector3<double>(-0.63, -0.63, 0.0), vector3<double>(0.63, 0.63, 385.56));
+	RPP pad(11, vector3<double>(-64.26, -64.26, -21.42), vector3<double>(64.26, 64.26, 406.98));
 
 	Cell* c1 = new Cell(1, materials[0], vector<int> {1, 2}, vector<bool> {false, false}); // UO2
 	Cell* c2 = new Cell(2, materials[1], vector<int> {1, 2}, vector<bool> {false, false}); // MOX43
@@ -141,7 +141,7 @@ int main(void) {
 	Universe* CHAM = new Universe(14, vector<int> {5, 7});
 	Universe* TUBE = new Universe(15, vector<int> {6, 7});
 
-	Lattice* LatType1 = new Lattice(100, Vector3(-10.71, -10.71, 0.0), Vector3(1.26, 1.26, 385.56), Vector3(17, 17, 1),
+	Lattice* LatType1 = new Lattice(100, vector3<double>(-10.71, -10.71, 0.0), vector3<double>(1.26, 1.26, 385.56), vector3<double>(17, 17, 1),
 		vector<vector<int>> {
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
@@ -162,7 +162,7 @@ int main(void) {
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 }
 	});
 
-	Lattice* LatType2 = new Lattice(200, Vector3(-10.71, -10.71, 0), Vector3(1.26, 1.26, 385.56), Vector3(17, 17, 1),
+	Lattice* LatType2 = new Lattice(200, vector3<double>(-10.71, -10.71, 0), vector3<double>(1.26, 1.26, 385.56), vector3<double>(17, 17, 1),
 		vector<vector<int>> {
 			{ 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11 },
 			{ 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 11 },
@@ -183,21 +183,21 @@ int main(void) {
 			{ 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11 }
 	});
 
-	RPP ls(100, Vector3(-10.71, -10.71, 0), Vector3(10.71, 10.71, 385.56));
+	RPP ls(100, vector3<double>(-10.71, -10.71, 0), vector3<double>(10.71, 10.71, 385.56));
 	Cell* L1 = new Cell(100, 100, vector<int> {100}, vector<bool> {false});
 	Cell* L2 = new Cell(200, 200, vector<int> {100}, vector<bool> {false});
 
 	Universe* uu1 = new Universe(101, vector<int> {100});
 	Universe* uu2 = new Universe(201, vector<int> {200});
 
-	Lattice* L = new Lattice(300, Vector3(-42.84, -42.84, 0.0), Vector3(21.42, 21.42, 385.56), Vector3(4, 4, 1),
+	Lattice* L = new Lattice(300, vector3<double>(-42.84, -42.84, 0.0), vector3<double>(21.42, 21.42, 385.56), vector3<double>(4, 4, 1),
 		vector<vector<int>> {
 			{ 101, 201, 201, 101 },
 			{ 201, 101, 101, 201 },
 			{ 201, 101, 101, 201 },
 			{ 101, 201, 201, 101 }});
 
-	RPP ls2(300, Vector3(-42.84, -42.84, 0.0), Vector3(42.84, 42.84, 385.56));
+	RPP ls2(300, vector3<double>(-42.84, -42.84, 0.0), vector3<double>(42.84, 42.84, 385.56));
 	Cell* L3 = new Cell(300, 300, vector<int> {300}, vector<bool> {false});
 
 	Cell* Padding = new Cell(8, materials[6], vector<int> {11, 300},
@@ -205,7 +205,7 @@ int main(void) {
 
 	Universe* world = new Universe(16, vector<int> {8, 300});
 
-	Checker(16, Vector3(0.63, 0.63, 100), Vector3(50, 50, 100), Vector3(1.26, 1.26, 100));
+	Checker(16, vector3<double>(0.63, 0.63, 100), vector3<double>(50, 50, 100), vector3<double>(1.26, 1.26, 100));
 	system("pause");
 
 	*/
@@ -214,7 +214,7 @@ int main(void) {
 	const int particle_num = 10000;
 	int analogs = 0;
 	for (int i = 0; i < particle_num; i++) {
-		Vector3 pos = rng.Random3D(sPos, ePos);
+		vector3<double> pos = rng.Random3D(sPos, ePos);
 		particles.push_back(Particle(pos, rng.IsoScatter(), 0));
 		Particle::seed++;
 	}
@@ -271,8 +271,8 @@ int main(void) {
 /*
 	//Benchmark
 	Cylinder s1 = Cylinder::CylZ(1, 0, 0, 0.54);
-	RPP s2(2, Vector3(-0.63, -0.63, 0.0), Vector3(0.63, 0.63, 385.56));
-	RPP pad(11, Vector3(-64.26, -64.26, -21.42), Vector3(64.26, 64.26, 406.98));
+	RPP s2(2, vector3<double>(-0.63, -0.63, 0.0), vector3<double>(0.63, 0.63, 385.56));
+	RPP pad(11, vector3<double>(-64.26, -64.26, -21.42), vector3<double>(64.26, 64.26, 406.98));
 
 	Cell* c1 = new Cell(1, materials[0], vector<int> {1, 2}, vector<bool> {false, false}); // UO2
 	Cell* c2 = new Cell(2, materials[1], vector<int> {1, 2}, vector<bool> {false, false}); // MOX43
@@ -289,7 +289,7 @@ int main(void) {
 	Universe* CHAM = new Universe(14, vector<int> {5, 7});
 	Universe* TUBE = new Universe(15, vector<int> {6, 7});
 
-	Lattice* LatType1 = new Lattice(100, Vector3(-10.71, -10.71, 0.0), Vector3(1.26, 1.26, 385.56), Vector3(17, 17, 1),
+	Lattice* LatType1 = new Lattice(100, vector3<double>(-10.71, -10.71, 0.0), vector3<double>(1.26, 1.26, 385.56), vector3<double>(17, 17, 1),
 		vector<vector<int>> {
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
@@ -310,7 +310,7 @@ int main(void) {
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 }
 	});
 
-	Lattice* LatType2 = new Lattice(200, Vector3(-10.71, -10.71, 0), Vector3(1.26, 1.26, 385.56), Vector3(17, 17, 1),
+	Lattice* LatType2 = new Lattice(200, vector3<double>(-10.71, -10.71, 0), vector3<double>(1.26, 1.26, 385.56), vector3<double>(17, 17, 1),
 		vector<vector<int>> {
 			{ 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11 },
 			{ 11, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 11 },
@@ -331,21 +331,21 @@ int main(void) {
 			{ 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11 }
 	});
 
-	RPP ls(100, Vector3(-10.71, -10.71, 0), Vector3(10.71, 10.71, 385.56));
+	RPP ls(100, vector3<double>(-10.71, -10.71, 0), vector3<double>(10.71, 10.71, 385.56));
 	Cell* L1 = new Cell(100, 100, vector<int> {100}, vector<bool> {false});
 	Cell* L2 = new Cell(200, 200, vector<int> {100}, vector<bool> {false});
 
 	Universe* uu1 = new Universe(101, vector<int> {100});
 	Universe* uu2 = new Universe(201, vector<int> {200});
 
-	Lattice* L = new Lattice(300, Vector3(-42.84, -42.84, 0.0), Vector3(21.42, 21.42, 385.56), Vector3(4, 4, 1),
+	Lattice* L = new Lattice(300, vector3<double>(-42.84, -42.84, 0.0), vector3<double>(21.42, 21.42, 385.56), vector3<double>(4, 4, 1),
 		vector<vector<int>> {
 			{ 101, 201, 201, 101 },
 			{ 201, 101, 101, 201 },
 			{ 201, 101, 101, 201 },
 			{ 101, 201, 201, 101 }});
 
-	RPP ls2(300, Vector3(-42.84, -42.84, 0.0), Vector3(42.84, 42.84, 385.56));
+	RPP ls2(300, vector3<double>(-42.84, -42.84, 0.0), vector3<double>(42.84, 42.84, 385.56));
 	Cell* L3 = new Cell(300, 300, vector<int> {300}, vector<bool> {false});
 
 	Cell* Padding = new Cell(8, materials[6], vector<int> {11, 300},
