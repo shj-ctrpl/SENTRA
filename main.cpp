@@ -8,6 +8,7 @@
 #include <mutex>
 #include <thread>
 
+#include "Utilities.h"
 #include "Particles.h"
 #include "Eigenvalue.h"
 #include "Cells.h"
@@ -17,25 +18,25 @@
 #include "Random_Generator.h"
 #include "Materials.h"
 
-/*
+// Check geometries
 void Checker(int world, const vector3<double>& min, const vector3<double>& max, const vector3<double>& step)
 {
 	Collision col;
 	for (double z = min.z; z <= max.z; z += step.z) {
-		cout << "Z = " << z << endl;
+		std::cout << "Z = " << z << std::endl;
 
-		cout << "   X";
+		std::cout << "   X";
 		for (double x = min.x; x <= max.x; x += step.x) {
-			cout.width(3);
-			cout << std::right << int(x);
+			std::cout.width(3);
+			std::cout << std::right << int(x);
 		}
 
-		cout << "\n Y\n";
+		std::cout << "\n Y\n";
 		for (double y = min.y; y <= max.y; y += step.y) {
-			cout.width(3);
-			cout << std::left << int(y);
+			std::cout.width(3);
+			std::cout << std::left << int(y);
 			for (double x = min.x; x <= max.x; x += step.x) {
-				cout.width(3);
+				std::cout.width(3);
 				col.Initialize();
 				col.univId.push_back(world);
 				while (true) {
@@ -48,14 +49,13 @@ void Checker(int world, const vector3<double>& min, const vector3<double>& max, 
 						break;
 					}
 				}
-				cout << col.cellId;
+				std::cout << col.cellId;
 			}
-			cout << "\n";
+			std::cout << "\n";
 		}
-		cout << "\n" << endl;
+		std::cout << "\n" << std::endl;
 	}
 }
-*/
 
 int main(void) {
 
@@ -63,7 +63,7 @@ int main(void) {
 
 	Random_generator rng = Random_generator(seed);
 	Eigenvalue E;
-	MaterialReader materialReader = MaterialReader("m1.txt");
+	MaterialReader materialReader = MaterialReader("materials.txt");
 
 	std::vector<Material> materials = materialReader.GetMaterials();
 	
@@ -125,6 +125,7 @@ int main(void) {
 	Cell* Lp = new Cell(4, materials[0], std::vector<int> {11, 12}, std::vector<bool> {true, false});
 
 	Universe* world = new Universe(12, std::vector<int> {3, 4});
+
 	/*
 	Cylinder s1 = Cylinder::CylZ(1, 0, 0, 0.54);
 	RPP s2(2, vector3<double>(-0.63, -0.63, 0.0), vector3<double>(0.63, 0.63, 385.56));
@@ -213,7 +214,6 @@ int main(void) {
 	system("pause");
 
 	*/
-
 
 	const int particle_num = 10000;
 	int analogs = 0;

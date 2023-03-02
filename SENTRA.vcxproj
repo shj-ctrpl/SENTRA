@@ -19,26 +19,27 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cells.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="Eigenvalue.h" />
-    <ClInclude Include="Foundations.h" />
-    <ClInclude Include="Geometries.h" />
-    <ClInclude Include="Materials.h" />
-    <ClInclude Include="Particles.h" />
-    <ClInclude Include="Random_Generator.h" />
-    <ClInclude Include="Surfaces.h" />
-    <ClInclude Include="Tallies.h" />
-    <ClInclude Include="Universes.h" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\Cells.cpp" />
+    <ClCompile Include="src\Collision.cpp" />
+    <ClCompile Include="src\Materials.cpp" />
+    <ClCompile Include="src\Particles.cpp" />
+    <ClCompile Include="src\Random_Generator.cpp" />
+    <ClCompile Include="src\Surfaces.cpp" />
+    <ClCompile Include="src\Universes.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Cells.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Materials.cpp" />
-    <ClCompile Include="Particles.cpp" />
-    <ClCompile Include="Surfaces.cpp" />
-    <ClCompile Include="Universes.cpp" />
+    <ClInclude Include="include\Cells.h" />
+    <ClInclude Include="include\Collision.h" />
+    <ClInclude Include="include\Eigenvalue.h" />
+    <ClInclude Include="include\Geometries.h" />
+    <ClInclude Include="include\Materials.h" />
+    <ClInclude Include="include\Particles.h" />
+    <ClInclude Include="include\Random_Generator.h" />
+    <ClInclude Include="include\Surfaces.h" />
+    <ClInclude Include="include\Tallies.h" />
+    <ClInclude Include="include\Universes.h" />
+    <ClInclude Include="include\Utilities.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -92,12 +93,37 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include;</IncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include</ExternalIncludePath>
+    <LibraryPath>$(SolutionDir)\include;</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)\src</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include;</IncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include</ExternalIncludePath>
+    <LibraryPath>$(SolutionDir)\include;</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)\src</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include;</IncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include</ExternalIncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);($(SolutionDir)\include;</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)\src</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include;</IncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)\include</ExternalIncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);($(SolutionDir)\include;</LibraryPath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)\src</SourcePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;$(SolutionDir)\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -112,6 +138,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;$(SolutionDir)\src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +153,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;$(SolutionDir)\src</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -140,6 +169,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;$(SolutionDir)\src</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
