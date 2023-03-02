@@ -33,8 +33,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Cells.cpp" />
-    <ClCompile Include="Geometries.cpp" />
+    <ClCompile Include="Collision.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Materials.cpp" />
+    <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Surfaces.cpp" />
     <ClCompile Include="Universes.cpp" />
   </ItemGroup>

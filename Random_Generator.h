@@ -1,6 +1,4 @@
 #pragma once
-#ifndef RANDOM_GENERATOR_H
-#define RANDOM_GENERATOR_H
 
 #include <random>
 #include <cmath>
@@ -93,5 +91,3 @@ public:
 		return vector3<double>(rand_x(gen), rand_y(gen), rand_z(gen));
 	}
 };
-
-#endif

@@ -50,6 +50,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Surfaces.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -59,10 +62,13 @@
     <ClCompile Include="Universes.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Collision.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Geometries.cpp">
+    <ClCompile Include="Materials.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Particles.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

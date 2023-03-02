@@ -1,3 +1,8 @@
+// ================================================================
+// SENTRA: Small Experimental Neutron Transport & Reactor Analysis
+// ================================================================
+#pragma once
+
 #include <iostream>
 #include <cstdio>
 #include <mutex>
@@ -12,10 +17,7 @@
 #include "Random_Generator.h"
 #include "Materials.h"
 
-// SENTRA: Small Experimental Neutron Transport & Reactor Analysis
-
-using namespace std;
-
+/*
 void Checker(int world, const vector3<double>& min, const vector3<double>& max, const vector3<double>& step)
 {
 	Collision col;
@@ -53,19 +55,21 @@ void Checker(int world, const vector3<double>& min, const vector3<double>& max, 
 		cout << "\n" << endl;
 	}
 }
+*/
 
 int main(void) {
 
 	int seed = 10;
 
 	Random_generator rng = Random_generator(seed);
-
-	MaterialReader materialReader = MaterialReader("m1.txt");
-	vector<Material> materials = materialReader.GetMaterials();
 	Eigenvalue E;
-	vector<Particle> particles;
-	vector<Particle> sParticles;
-	vector<double> egs;
+	MaterialReader materialReader = MaterialReader("m1.txt");
+
+	std::vector<Material> materials = materialReader.GetMaterials();
+	
+	std::vector<Particle> particles;
+	std::vector<Particle> sParticles;
+	std::vector<double> egs;
 
 	const vector3<double> sPos(-8.5, -8.5, 0.0);
 	const vector3<double> ePos(8.5, 8.5, 20);
@@ -92,12 +96,12 @@ int main(void) {
 	RPP pad2(12, vector3<double>(-9.0, -9.0, -1.0), vector3<double>(9.0, 9.0, 21));
 	pad2.MakeReflective();
 
-	Cell* c1 = new Cell(1, materials[0], vector<int> {1, 2}, vector<bool> {false, false});
-	Cell* c2 = new Cell(2, materials[0], vector<int> {1, 2}, vector<bool> {true, false});
-	Universe* pin = new Universe(10, vector<int> {1, 2});
+	Cell* c1 = new Cell(1, materials[0], std::vector<int> {1, 2}, std::vector<bool> {false, false});
+	Cell* c2 = new Cell(2, materials[0], std::vector<int> {1, 2}, std::vector<bool> {true, false});
+	Universe* pin = new Universe(10, std::vector<int> {1, 2});
 
-	Lattice* latt = new Lattice(11, vector3<double>(-8.5, -8.5, 0.0), vector3<double>(1.0, 1.0, 20.0), vector3<double>(17, 17, 1),
-		vector<vector<int>> {
+	Lattice* latt = new Lattice(11, vector3<double>(-8.5, -8.5, 0.0), vector3<double>(1.0, 1.0, 20.0), vector3<int>(17, 17, 1),
+		std::vector<std::vector<int>> {
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
@@ -117,10 +121,10 @@ int main(void) {
 			{ 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 }
 	});
 
-	Cell* L1 = new Cell(3, 11, vector<int> {11}, vector<bool> {false});
-	Cell* Lp = new Cell(4, materials[0], vector<int> {11, 12}, vector<bool> {true, false});
+	Cell* L1 = new Cell(3, 11, std::vector<int> {11}, std::vector<bool> {false});
+	Cell* Lp = new Cell(4, materials[0], std::vector<int> {11, 12}, std::vector<bool> {true, false});
 
-	Universe* world = new Universe(12, vector<int> {3, 4});
+	Universe* world = new Universe(12, std::vector<int> {3, 4});
 	/*
 	Cylinder s1 = Cylinder::CylZ(1, 0, 0, 0.54);
 	RPP s2(2, vector3<double>(-0.63, -0.63, 0.0), vector3<double>(0.63, 0.63, 385.56));
@@ -220,16 +224,16 @@ int main(void) {
 	}
 
 	for (int itr = 1; itr <= 550; itr++) {
-		cout << "======== Iteration: " << itr << " ========" << endl;
+		std::cout << "======== Iteration: " << itr << " ========" << std::endl;
 		E.initialize(particle_num);
 
 		for (Particle& p : particles) {
 			p.Transport(12, sParticles, E);
 		}
 
-		cout << "Primary particles: " << particles.size() << "\n";
-		cout << "Secondary particles: " << sParticles.size() << "\n";
-		cout << "Analog eigenvalue: " << double(sParticles.size()) / double(particles.size()) << "\n";
+		std::cout << "Primary particles: " << particles.size() << "\n";
+		std::cout << "Secondary particles: " << sParticles.size() << "\n";
+		std::cout << "Analog eigenvalue: " << double(sParticles.size()) / double(particles.size()) << "\n";
 
 		E.setDivision(particles.size());
 
@@ -242,14 +246,14 @@ int main(void) {
 			std::for_each(std::begin(egs), std::end(egs), [&](const double d) {accum += (d - mean) * (d - mean); });
 
 			double stdev = sqrt(accum / (egs.size() - 1));
-			cout << "Eigenvalue mean: " << mean << "  Eigenvalue Stdev: " << stdev << "\n";
-			cout << "Analog Ev mean: " << analogs / ((itr - 20) * particle_num) << "\n";
+			std::cout << "Eigenvalue mean: " << mean << "  Eigenvalue Stdev: " << stdev << "\n";
+			std::cout << "Analog Ev mean: " << analogs / ((itr - 20) * particle_num) << "\n";
 		}
 		else {
 			E.print_Eigenvalue();
 		}
 
-		cout << endl;
+		std::cout << std::endl;
 		particles.clear();
 
 		if (sParticles.size() > particle_num) {
@@ -263,7 +267,7 @@ int main(void) {
 	}
 
 	for (auto& p : egs) {
-		cout << p << endl;
+		std::cout << p << std::endl;
 	}
 }
 
