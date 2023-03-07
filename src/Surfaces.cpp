@@ -1,8 +1,7 @@
 #include "Surfaces.h"
 
 using namespace std;
-
-unordered_map<int, Surface*> Surface::surfaces = { {} };
+using namespace World;
 
 // ================================
 // Class Plane

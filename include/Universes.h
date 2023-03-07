@@ -15,6 +15,11 @@
 #include "Random_Generator.h"
 #include "Materials.h"
 
+class Universe;
+
+namespace World {
+	extern std::unordered_map<int, Universe*> universes;
+}
 
 class Universe {
 private:
@@ -22,7 +27,6 @@ private:
 	std::vector<int> childs;
 
 public:
-	static std::unordered_map<int, Universe*> universes;
 	std::unordered_map<int, std::forward_list<int>> neighbors;
 
 	Universe() {}
@@ -35,13 +39,15 @@ public:
 class Lattice : public Universe {
 private:
 	int id = 0;
-	int lat_at_x = 0, lat_at_y = 0;
 	vector3<double> pos_start, pos_end, lat_size;
 	vector3<int> lat_num;
 	std::vector<std::vector<int>> indices;
 
-	int atUniv(const vector3<double>& pos);
-	vector3<double> local(const vector3<double>& pos) const;
+	// Returns indices of the lattice.
+	vector3<int> LocalIndex(const vector3<double>& pos);
+
+	// Returns local position of the lattice.
+	vector3<double> LocalPos(const vector3<double>& pos) const;
 
 public:
 	Lattice(int id, const vector3<double>& pos_start, const vector3<double>& lat_size, 

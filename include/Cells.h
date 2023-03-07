@@ -15,6 +15,12 @@
 #include "Materials.h"
 #include "Utilities.h"
 
+class Cell;
+
+namespace World {
+	extern std::unordered_map<int, Cell*> cells;
+}
+
 class Cell
 {
 private:
@@ -28,15 +34,14 @@ private:
 
 
 public:
-	static std::unordered_map<int, Cell*> cells;
 	std::forward_list<int> neighbors;
-	Material material = Material();
+	int material;
 
 	Cell() {}
 	~Cell() = default;
 
-	Cell(int id, Material material, const std::vector<int>& surf_ids, const std::vector<bool>& senses);
-	Cell(int id, Material material, const std::vector<int>& surf_ids, const std::vector<bool>& senses, std::vector<double> surf_areas, double volume);
+	Cell(int id, int material, const std::vector<int>& surf_ids, const std::vector<bool>& senses);
+	Cell(int id, int material, const std::vector<int>& surf_ids, const std::vector<bool>& senses, std::vector<double> surf_areas, double volume);
 	Cell(int id, int fill, const std::vector<int>& surf_ids, const std::vector<bool>& senses);
 
 	bool findFill(Collision& col) const;

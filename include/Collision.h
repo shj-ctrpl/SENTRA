@@ -34,10 +34,10 @@ public:
 	void Set_Surf(int surfId) { this->surfId = surfId; }
 
 	// For universes: not adding any biases
-	void Add_travel(int univId, int fill);
+	void Push_travel(int univId, int fill);
 
 	// For lattices: adding indices and biases
-	void Add_travel(int univId, const vector3<int>& lattice_indice, const vector3<double>& lattice_bias);
+	void Push_travel(int univId, const vector3<int>& lattice_indices, const vector3<double>& lattice_bias);
 
 	// Pop last travel info
 	void Pop_travel();
@@ -60,7 +60,12 @@ public:
 	// Return the index of the last universe
 	// If no universe found, int& univ will not change.
 	bool get_Univ(int& univ) const noexcept;
-	int get_Univ() const noexcept { return travel_history.back().first; }
+	int get_Univ() const noexcept { 
+		if (travel_history.empty()) {
+			return -1;
+		}
+		return travel_history.back().first;
+	}
 
 	std::vector<travel_info_t> Return_History() const noexcept {
 		return travel_history;

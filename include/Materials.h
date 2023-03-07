@@ -5,15 +5,13 @@
 #include <numeric>
 #include <fstream>
 #include <sstream>
+#include <unordered_map>
 
-enum ReactionType {
-	TOT = 0,
-	ABS = 1,
-	CAP = 2,
-	FIS = 3,
-	SCT = 4
-};
+class Material;
 
+namespace World {
+	extern std::unordered_map<int, Material*> materials;
+}
 
 class Material {
 private:
@@ -82,6 +80,11 @@ public:
 
 	double GetNu(int group) const {
 		if (group < Nu.size()) { return Nu[group]; }
+		else return 0.0f;
+	}
+
+	double GetNuSigmaF(int group) const {
+		if (group < Nu.size()) { return Nu[group] * XS_fis[group]; }
 		else return 0.0f;
 	}
 

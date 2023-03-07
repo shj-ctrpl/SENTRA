@@ -1,8 +1,7 @@
 #include "Universes.h"
 
 using namespace std;
-
-unordered_map<int, Universe*> Universe::universes = {};
+using namespace World;
 
 // ================================
 // Class Universe
@@ -15,37 +14,16 @@ Universe::Universe(int id, vector<int> childs) {
 }
 
 bool Universe::findCell(const vector3<double>& pos, Collision& col) {
-	auto i = neighbors.find(col.cellId);
-
-	// Try neighbor search
-	if (i != neighbors.end()) {
-		for (int c : i->second) {
-			if (Cell::cells[c]->isInCell(pos)) {
-				col.cellId = c;
-				return true;
-			}
-		}
-	}
-	else {
-		// No key found, add key to neighbors
-		neighbors.insert(make_pair(col.cellId, forward_list<int> {}));
-	}
-
 	// Failed to find cells by neighbors search
 	for (int c : childs) {
-		if (Cell::cells[c]->isInCell(pos)) {
-			col.cellId = c;
-			if (col.cellId != c) {
-				neighbors[col.cellId].push_front(c);
-			}
+		if (cells[c]->isInCell(pos)) {
+			col.Push_travel(this->id, c);
 			return true;
 		}
 	}
 
 	// Failed to find any cell in the Universe.		
-	col.lastuniv = col.univId.back();
-	col.univId.pop_back();
-	col.RemoveBias();
+	col.Pop_travel();
 	return false;
 }
 
@@ -62,18 +40,23 @@ Lattice::Lattice(int id, const vector3<double>& pos_start, const vector3<double>
 	this->indices = indices;
 	universes.insert({ this->id, this });
 }
-int Lattice::atUniv(const vector3<double>& pos) {
-	lat_at_x = int(floor((pos.x - pos_start.x) / lat_size.x));
-	if (lat_at_x < 0) { lat_at_x = 0; }
-	if (lat_at_x >= lat_num.x) { lat_at_x = lat_num.x - 1; }
+vector3<int> Lattice::LocalIndex(const vector3<double>& pos) {
+	int idx_x = int(floor((pos.x - pos_start.x) / lat_size.x));
+	if (idx_x < 0) { idx_x = 0; }
+	if (idx_x >= lat_num.x) { idx_x = lat_num.x - 1; }
 
-	lat_at_y = int(floor((pos.y - pos_start.y) / lat_size.y));
-	if (lat_at_y < 0) { lat_at_y = 0; }
-	if (lat_at_y >= lat_num.y) { lat_at_y = lat_num.y - 1; }
-	return indices[lat_at_y][lat_at_x];
+	int idx_y = int(floor((pos.y - pos_start.y) / lat_size.y));
+	if (idx_y < 0) { idx_y = 0; }
+	if (idx_y >= lat_num.y) { idx_y = lat_num.y - 1; }
+
+	int idx_z = int(floor((pos.z - pos_start.z) / lat_size.z));
+	if (idx_z < 0) { idx_z = 0; }
+	if (idx_z >= lat_num.z) { idx_z = lat_num.z - 1; }
+
+	return vector3(idx_x, idx_y, idx_z);
 }
 
-vector3<double> Lattice::local(const vector3<double>& pos) const {
+vector3<double> Lattice::LocalPos(const vector3<double>& pos) const {
 	vector3<double> localPos = vector3<double>(
 		fmod((pos.x - pos_start.x), lat_size.x) - lat_size.x / 2,
 		fmod((pos.y - pos_start.y), lat_size.y) - lat_size.y / 2,
@@ -82,23 +65,21 @@ vector3<double> Lattice::local(const vector3<double>& pos) const {
 }
 
 bool Lattice::findCell(const vector3<double>& pos, Collision& col) {
-	bool found = false;
-
 	if (pos >= pos_start && pos <= pos_end) {
-		found = universes[atUniv(pos)]->findCell(local(pos), col);
-		if (found) {
-			col.univId.push_back(atUniv(pos));
-			col.AddBias(local(pos) - pos);
+		vector3<int> idx = LocalIndex(pos);
+		vector3<double> localpos = LocalPos(pos);
+		int univ = indices[idx.x][idx.y];
+
+		col.Push_travel(this->id, idx, (localpos - pos));
+
+		if (universes[univ]->findCell(localpos, col)) {
 			return true;
 		}
 		else {
-			col.lastuniv = col.univId.back();
-			col.univId.pop_back();
+			col.Pop_travel();
 			return false;
 		}
 	}
-	else {
-		col.univId.pop_back();
-		return false;
-	}
+	col.Pop_travel();
+	return false;
 }

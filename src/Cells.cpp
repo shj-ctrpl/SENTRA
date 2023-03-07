@@ -1,10 +1,10 @@
 #include "Cells.h"
 
 using namespace std;
+using namespace World;
 
-unordered_map<int, Cell*> Cell::cells = {};
-
-Cell::Cell(int id, Material material, const vector<int>& surf_ids, const vector<bool>& senses) {
+Cell::Cell(int id, int material, const vector<int>& surf_ids, const vector<bool>& senses) {
+	this->fill == NULL;
 	this->surf_ids = surf_ids;
 	this->senses = senses;
 	this->material = material;
@@ -12,7 +12,8 @@ Cell::Cell(int id, Material material, const vector<int>& surf_ids, const vector<
 	cells.insert({ this->id, this });
 }
 
-Cell::Cell(int id, Material material, const vector<int>& surf_ids, const vector<bool>& senses, vector<double> surf_areas, double volume) {
+Cell::Cell(int id, int material, const vector<int>& surf_ids, const vector<bool>& senses, vector<double> surf_areas, double volume) {
+	this->fill == NULL;
 	this->surf_ids = surf_ids;
 	this->senses = senses;
 	this->material = material;
@@ -31,11 +32,10 @@ Cell::Cell(int id, int fill, const vector<int>& surf_ids, const vector<bool>& se
 }
 
 bool Cell::findFill(Collision& col) const {
-	if (fill == -1) {
+	if (fill == NULL) {
 		return false;
 	}
 	else {
-		col.univId.push_back(fill);
 		return true;
 	}
 }
@@ -44,7 +44,7 @@ bool Cell::isInCell(const vector3<double>& pos) const {
 	bool sense = true;
 	int j = 0;
 	for (int surfid : surf_ids) {
-		bool tmpsense = Surface::surfaces[surfid]->Sense(pos);
+		bool tmpsense = surfaces[surfid]->Sense(pos);
 		sense = sense && !(senses[j] ^ tmpsense);
 		j++;
 	}
@@ -54,12 +54,12 @@ bool Cell::isInCell(const vector3<double>& pos) const {
 double Cell::DTS(const vector3<double>& pos, const vector3<double>& dir, Collision& col) {
 	double tmp = INF(), dts = INF();
 	for (int surfId : surf_ids) {
-		tmp = Surface::surfaces[surfId]->DTS(pos, dir);
+		tmp = surfaces[surfId]->DTS(pos, dir);
 		if (tmp < 0) { continue; }
 		if (tmp < dts) {
 			if ((abs(tmp - dts) / dts) >= EPS()) {
 				dts = tmp;
-				col.surfId = surfId;
+				col.Set_Surf(surfId);
 			}
 			else {
 				continue;

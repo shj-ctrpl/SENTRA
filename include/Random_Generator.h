@@ -9,6 +9,12 @@
 #include "Geometries.h"
 #include "Utilities.h"
 
+enum ReactionType {
+	FIS = 0,
+	ABS = 1,
+	SCT = 2
+};
+
 class Random_generator
 {
 private:

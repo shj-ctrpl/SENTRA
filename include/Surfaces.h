@@ -10,6 +10,11 @@
 #include "Collision.h"
 #include "Utilities.h"
 
+class Surface;
+
+namespace World {
+	extern std::unordered_map<int, Surface*> surfaces;
+}
 
 class Surface {
 private:
@@ -18,7 +23,6 @@ protected:
 	bool isReflective = false;
 
 public:
-	static std::unordered_map<int, Surface*> surfaces;
 	Surface() {	}
 	~Surface() = default;
 

@@ -4,43 +4,38 @@
 
 class Eigenvalue {
 private:
-	double divid = 1.0f;
+	double wgt = 1.0f;
 	double k_pth = 0.0f;
 	double k_col = 0.0f;
 	double k_abs = 0.0f;
 	double k_avg = 0.0f;
+
 public:
 	Eigenvalue() {
-
-	}
-
-	~Eigenvalue() = default;
-
-	void initialize(double divider) {
-		divid = divider;
 		k_pth = 0.0f;
 		k_col = 0.0f;
 		k_abs = 0.0f;
 		k_avg = 0.0f;
 	}
+	~Eigenvalue() = default;
 
-	void setDivision(double divider) {
-		divid = divider;
+	void Set_Weight(const double wgt) {
+		this->wgt = wgt;
 	}
 
-	inline void add_Pathlength(double p) noexcept {
+	inline void Upadate_Pathlength(const double p) noexcept {
 		k_pth += p;
 	}
 
-	inline void add_Collision(double c) noexcept {
-		k_col += c;
-	}
-
-	inline void add_Absorption(double a) noexcept {
+	inline void Update_Absorption(const double a) noexcept {
 		k_abs += a;
 	}
 
-	double print_Eigenvalue() noexcept {
+	inline void Update_Collision(const double c) noexcept {
+		k_col += c;
+	}
+
+	double Print_Eigenvalue() noexcept {
 		std::cout << "Pathlength estimator: " << k_pth / divid << "\n";
 		std::cout << "Collision  estimator: " << k_col / divid << "\n";
 		std::cout << "Absorption estimator: " << k_abs / divid << "\n";

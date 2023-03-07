@@ -22,14 +22,13 @@ void Collision::Initialize() {
 	cellId = -1;
 }
 
-void Collision::Add_travel(int univId, int fill) {
+void Collision::Push_travel(int univId, int fill) {
 	travel_history.push_back(pair(univId, fill));
 }
 
-void Collision::Add_travel(int univId, const vector3<int>& lattice_index, const vector3<double>& lattice_bias) {
+void Collision::Push_travel(int univId, const vector3<int>& lattice_index, const vector3<double>& lattice_bias) {
 	travel_history.push_back(pair(univId, lattice_index));
 	biases.push_back(lattice_bias);
-
 	bias = std::accumulate(biases.begin(), biases.end(), vector3<double>(0, 0, 0));
 }
 
